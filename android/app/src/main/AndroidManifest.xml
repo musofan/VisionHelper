@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 语音交互 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 相机（手机/眼镜类 Android 设备使用标准 Camera2 权限） -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Quest 3/3S 通透相机（Passthrough Camera API，Horizon OS v74+）
+         注意：该权限属于 Meta 私有权限，需要在 Meta 开发者后台申请并由 Meta 签名后才可用 -->
+    <uses-permission
+        android:name="horizonos.permission.HEADSET_CAMERA"
+        tools:ignore="ProtectedPermissions" />
+    <!-- 长时佩戴记录（前台服务 + 后台录音/截图） -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <application
+        android:label="@string/app_name"
+        android:allowBackup="false"
+        android:extractNativeLibs="true"
+        android:theme="@android:style/Theme.Material.Light">
+        <!-- Quest 上架时的设备声明（侧载调试可忽略）
+             <property android:name="com.oculus.supportedDevices" android:value="quest3|quest3s|quest2|questpro" /> -->
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

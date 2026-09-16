@@ -1,0 +1,27 @@
+# 本地虚拟环境
+.venv/
+venv/
+
+# 模型与大文件（不进 git，用脚本下载）
+models/
+*.onnx
+*.pt
+*.tar.bz2
+*.wav
+
+# 构建产物
+build/
+.gradle/
+local.properties
+*.apk
+*.aab
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+
+# Unity（若后续引入）
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
