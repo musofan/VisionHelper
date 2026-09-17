@@ -21,23 +21,34 @@
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application
         android:label="@string/app_name"
         android:allowBackup="false"
         android:extractNativeLibs="true"
-        android:theme="@android:style/Theme.Material.Light">
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.Material.NoActionBar">
         <!-- Quest 上架时的设备声明（侧载调试可忽略）
              <property android:name="com.oculus.supportedDevices" android:value="quest3|quest3s|quest2|questpro" /> -->
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="landscape">
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize|density|uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 设备诊断页：相机/麦克风/录制能力探针，用于在不同头显上确认输入源可用性 -->
+        <activity
+            android:name=".ProbeActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize|density|uiMode" />
     </application>
 </manifest>

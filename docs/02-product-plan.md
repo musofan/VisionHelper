@@ -57,16 +57,33 @@ v0.2+：SAM2 精细分割、开集云识别（Qwen-VL）、空间锚点（Meta �
 - ✅ Android 探针 APK 构建成功（app-debug.apk 2.4MB：Camera2 截图 + 16k PCM 采集 + 权限流程）
 - ⬜ **真机验证**：Quest 3（2D 相框模式 & 开发者模式侧载）、Pico 4 各装一次探针 APK；确认 MediaProjection 录屏可行性（唯一未解硬问题）
 
-### Phase 1 · MVP 骨架（1.5~2 周）
-1. 正式 App 结构（替换 probe）：Compose UI + Hilt + Room
-2. FrameSource 抽象：Camera2 实现 + 手动选图；YoloDetector 接入 onnxruntime-android（复用本仓库 Python 验证的后处理逻辑移植到 Kotlin）
-3. Overlay 渲染 + F2 验收（真机 5FPS）
-4. SnapshotStore + F5 记录库
+### Phase 1 · MVP 骨架（✅ v0.1 已实现，2026-09-17）
+
+实际实现与初始计划的差异（以"最少依赖、最快可上头显体验"为优先）：
+
+| 计划 | 实际 | 原因 |
+|---|---|---|
+| Compose UI + Hilt + Room | **原生 View + 手写依赖 + 文件存储** | 保持零 AndroidX，唯一依赖 onnxruntime-android（POM 无传递依赖），构建最稳、APK 最可控 |
+| 仅 Camera2 输入源 | **演示图 + Camera2 + 相册选图** | 头显拿不到透视帧，必须有"无相机也能体验"的兜底输入源 |
+| — | **新增 `ProbeActivity` 设备诊断页** | 每台头显的相机/麦克风/录制能力差异大，需要现场可读的诊断入口 |
+
+已完成清单：
+1. ✅ 正式 App 结构（`com.visionhelper`，vision/source/voice/store/ui 分层）
+2. ✅ FrameSource 抽象 + DemoFrameSource + CameraFrameSource + 相册选图
+3. ✅ YoloOnnxDetector（onnxruntime-android）＋ `YoloPostProcess` 纯 Kotlin 后处理
+4. ✅ OverlayView 框+标签渲染（归一化坐标按 fitCenter 映射）
+5. ✅ RecordStore 记录库（JPEG + JSON，可导出）
+6. ✅ F2 验收数据待真机补测（本机 Python 实测 38.6ms/帧，对应 5~10FPS 节流目标）
+7. ✅ `YoloPostProcessTest` 4 个 JVM 单测（对照 Python 参考实现锁死坐标与 NMS）
 
 ### Phase 2 · 语音闭环（1~2 周）
-5. sherpa-onnx AAR 集成 + 模型首启下载器（断点续传，走 hf-mirror 兜底）
-6. ASR 指令路由（F3）+ 云 LLM 客户端（OpenAI 兼容协议、流式）（F4 前半）
-7. "先文字后播报"会话协议（气泡状态机：thinking→text→speaking，TTS 可打断）+ VITS（F4 验收）
+
+8. ⬜ sherpa-onnx AAR 集成（替换系统 ASR/TTS），模型首启下载器（走 hf-mirror 兜底）
+9. ⬜ 离线唤醒词（sherpa-onnx KWS）+ 连续监听
+10. ⬜ LLM 流式输出（SSE）让"文字先行"更即时；多轮上下文压缩
+
+> v0.1 已用系统 `SpeechRecognizer` + 系统 `TextToSpeech` + 自研 OpenAI 兼容客户端跑通
+> 「提问 → 文字气泡 → 延迟播报 → 可打断」全链路，Phase 2 只是把它们换成离线的。
 
 ### Phase 3 · Meta 增强与打磨（2 周）
 8. Quest 3 侧载调优（性能/发热/续航）；Spatial SDK variant：3D 面板 + 空间锚点

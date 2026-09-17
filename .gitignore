@@ -9,6 +9,9 @@ models/
 *.tar.bz2
 *.wav
 
+# 例外：APK 运行必需的端侧模型必须随仓库走，保证 clone 后可直接构建
+!android/app/src/main/assets/yolov8n.onnx
+
 # 构建产物
 build/
 .gradle/
